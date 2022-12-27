@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_12_27_081220) do
+ActiveRecord::Schema[7.0].define(version: 2022_12_27_125450) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -86,29 +86,23 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_27_081220) do
     t.float "amount"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.float "tax_rate"
     t.index ["item_id"], name: "index_order_details_on_item_id"
     t.index ["order_id"], name: "index_order_details_on_order_id"
   end
 
   create_table "orders", force: :cascade do |t|
-    t.bigint "user_id", null: false
     t.float "total_amount"
     t.bigint "offer_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "customer_name"
+    t.string "customer_contact_number"
     t.index ["offer_id"], name: "index_orders_on_offer_id"
-    t.index ["user_id"], name: "index_orders_on_user_id"
   end
 
   create_table "tax_rates", force: :cascade do |t|
     t.float "rate"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "users", force: :cascade do |t|
-    t.string "name"
-    t.string "contact_number"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -121,5 +115,4 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_27_081220) do
   add_foreign_key "order_details", "items"
   add_foreign_key "order_details", "orders"
   add_foreign_key "orders", "offers"
-  add_foreign_key "orders", "users"
 end
