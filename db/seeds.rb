@@ -5,3 +5,12 @@
 #
 #   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
 #   Character.create(name: "Luke", movie: movies.first)
+
+item_types = ["Hot Coffees", "Cold Coffee", "Sandwich"]
+
+puts "create item_types: #{item_types}"
+item_types.each do |item_type|
+  ItemType.find_or_create_by(name: item_type)
+end
+
+puts "created item_types: #{item_types}"
