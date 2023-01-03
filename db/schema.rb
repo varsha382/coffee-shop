@@ -51,31 +51,24 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_27_130622) do
   create_table "items", force: :cascade do |t|
     t.string "name"
     t.float "amount"
-    t.bigint "tax_rate_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "availability"
     t.bigint "item_type_id"
     t.index ["item_type_id"], name: "index_items_on_item_type_id"
-    t.index ["tax_rate_id"], name: "index_items_on_tax_rate_id"
-  end
-
-  create_table "offered_items", force: :cascade do |t|
-    t.string "type"
-    t.float "quantity"
-    t.bigint "item_id", null: false
-    t.bigint "offer_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["item_id"], name: "index_offered_items_on_item_id"
-    t.index ["offer_id"], name: "index_offered_items_on_offer_id"
   end
 
   create_table "offers", force: :cascade do |t|
-    t.string "name"
-    t.boolean "is_offer_on_amount"
-    t.float "amount"
-    t.float "percent"
+    t.integer "base_item_id"
+    t.integer "child_item_id"
+    t.integer "base_item_quantity"
+    t.integer "child_item_quantity"
+    t.boolean "is_discount_available"
+    t.integer "discount_percent"
+    t.integer "offer_applied_on_item_type_id"
+    t.integer "free_item_id"
+    t.integer "free_item_quantity"
+    t.string "code"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -84,39 +77,54 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_27_130622) do
     t.bigint "order_id", null: false
     t.bigint "item_id", null: false
     t.float "amount"
+    t.float "total_tax"
+    t.float "total_amount"
+    t.integer "quantity"
+    t.boolean "is_free_item", default: false
+    t.float "discount_amount"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.float "tax_rate"
     t.index ["item_id"], name: "index_order_details_on_item_id"
     t.index ["order_id"], name: "index_order_details_on_order_id"
   end
 
   create_table "orders", force: :cascade do |t|
     t.float "total_amount"
-    t.bigint "offer_id", null: false
+    t.bigint "offer_id"
+    t.string "customer_name"
+    t.string "customer_email"
+    t.string "status", default: "Inprogress"
+    t.bigint "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "customer_name"
-    t.string "customer_contact_number"
-    t.boolean "is_offer_on_amount"
     t.float "amount"
     t.float "total_tax"
-    t.string "free_items"
+    t.float "total_discount"
     t.index ["offer_id"], name: "index_orders_on_offer_id"
+    t.index ["user_id"], name: "index_orders_on_user_id"
   end
 
   create_table "tax_rates", force: :cascade do |t|
     t.float "rate"
+    t.bigint "item_type_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["item_type_id"], name: "index_tax_rates_on_item_type_id"
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.string "name"
+    t.string "user_name"
+    t.string "email"
+    t.string "password_digest"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "items", "tax_rates"
-  add_foreign_key "offered_items", "items"
-  add_foreign_key "offered_items", "offers"
   add_foreign_key "order_details", "items"
   add_foreign_key "order_details", "orders"
   add_foreign_key "orders", "offers"
+  add_foreign_key "orders", "users"
 end

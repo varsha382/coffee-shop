@@ -2,8 +2,12 @@
 
 one:
   name: MyString
-  contact_number: MyString
+  user_name: MyString
+  email: MyString
+  Password_digest: MyString
 
 two:
   name: MyString
-  contact_number: MyString
+  user_name: MyString
+  email: MyString
+  Password_digest: MyString

@@ -4,7 +4,6 @@ class CreateItems < ActiveRecord::Migration[7.0]
       t.string :type
       t.string :name
       t.float :amount
-      t.references :tax_rate, null: false, foreign_key: true
 
       t.timestamps
     end
