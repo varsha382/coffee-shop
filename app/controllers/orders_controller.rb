@@ -56,16 +56,7 @@ class OrdersController < ApplicationController
     # Only allow a list of trusted parameters through.
     def order_params
       params.require(:order).permit(
-        "customer_name",                           
-        "customer_email",
         "status",
-        "amount",
-        "total_tax",
-        "total_amount",
-        # "is_discount_available",
-        # "discount_amount",
-        # "offer_id",
-        # "free_items",
         order_details_attributes: ["item_id", "amount", "total_tax", "_destroy", "id", "quantity"])
     end
 end
