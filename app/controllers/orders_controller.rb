@@ -1,6 +1,5 @@
 class OrdersController < ApplicationController
-  skip_before_action :authenticate_user
-  before_action :set_order, only: %i[ show edit update destroy ]
+  before_action :set_order, only: %i[ show update ]
 
   # GET /orders/1.json
   def show
@@ -9,25 +8,6 @@ class OrdersController < ApplicationController
       errors: [],
       message: "" 
     }, status: :ok
-  end
-
-  # POST /orders.json
-  def create
-    @order = Order.new(order_params)
-
-    if @order.save
-      render json: { status: :success,
-        order: @order.as_json(include: :order_details),
-        errors: [],
-        message: "Order was successfully Created" 
-      }, status: :ok
-    else
-      render json: { status: :success,
-        order: @order.as_json(include: :order_details),
-        errors: @order.errors.messages,
-        message: "Order was Failed to Create" 
-      }, status: :unprocessable_entity
-    end
   end
 
   # PATCH/PUT /orders/1.json
