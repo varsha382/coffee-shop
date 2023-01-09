@@ -3,7 +3,7 @@ class CreateAndUpdateOrderItem
     def call(user, order_detail_params)
       begin
         order = prosess(user, order_detail_params)
-        {status: :success, order: order.as_json(include: [:order_details, :offer]), errors: [], message: "Added/Updated Item into Cart"}
+        {status: :success, order: order.as_json(include: [:offer, order_details: {methods: [:item_image_url, :item_name]}]), errors: [], message: "Added/Updated Item into Cart"}
       rescue => exception
         {status: :failed, errors: exception.message, message: "Failed to add item"}
       end
@@ -15,8 +15,9 @@ class CreateAndUpdateOrderItem
         order = get_order(user)
         order = build_and_assign_order(order, order_detail_params)
         order.save
+        order.destroy if order.order_details.blank?
         raise order.errors.full_messages if order.errors.any?
-        order.reload
+        reload_order(order.id)
       end
     end
 
@@ -24,6 +25,10 @@ class CreateAndUpdateOrderItem
       order = get_order_by_user(user)
       order.save(validate: false)
       order
+    end
+
+    def reload_order(order_id)
+      Order.find_by(id: order_id)
     end
 
     def get_order_by_user(user)

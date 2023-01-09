@@ -5,9 +5,9 @@ class OrderDetail < ApplicationRecord
   after_validation :apply_offer
   after_validation :update_tax_and_amount
   validates_length_of :quantity, minimum: 1, message: "must be grater than 1"
-  before_destroy :apply_offer
+  before_destroy :apply_offer, :update_tax_and_amount
 
-  delegate :name, to: :item, prefix: :item
+  delegate :name, :image_url, to: :item, prefix: :item
 
   private
   def update_tax_and_amount
@@ -20,10 +20,10 @@ class OrderDetail < ApplicationRecord
   
   def apply_offer
     offer = order.offer
-    if offer.present? && offer.is_discount_available && (offer.offer_applied_on_item_type.id == item.item_type_id)
+    if offer.present? && offer.is_discount_available && (offer.offer_applied_on_item_type_id == item.item_type_id)
       self.discount_amount = (self.item.amount * self.quantity.to_i * offer.discount_percent) / 100
       order_detail = order.order_details.find{|order_detail| order_detail if order_detail.is_free_item }
-      order_detail.destroy if !order_detail.new_record?
+      order_detail.destroy if order_detail && !order_detail.new_record?
     elsif offer.present? && !offer.is_discount_available && !order.order_details.find{|order_detail| order_detail.item_id == offer.free_item_id}
       self.discount_amount = 0
       order.order_details.build({
@@ -37,7 +37,7 @@ class OrderDetail < ApplicationRecord
       })
     elsif offer.blank?
       order_detail = order.order_details.find{|order_detail| order_detail if order_detail.is_free_item }
-      order_detail.destroy if !order_detail.new_record?
+      order_detail.destroy if order_detail && !order_detail.new_record?
       self.discount_amount = 0
     end
   end

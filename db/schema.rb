@@ -91,8 +91,6 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_27_130622) do
   create_table "orders", force: :cascade do |t|
     t.float "total_amount"
     t.bigint "offer_id"
-    t.string "customer_name"
-    t.string "customer_email"
     t.string "status", default: "Inprogress"
     t.bigint "user_id"
     t.datetime "created_at", null: false
@@ -113,8 +111,6 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_27_130622) do
   end
 
   create_table "users", force: :cascade do |t|
-    t.string "name"
-    t.string "user_name"
     t.string "email"
     t.string "password_digest"
     t.datetime "created_at", null: false

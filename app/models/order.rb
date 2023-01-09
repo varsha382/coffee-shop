@@ -11,7 +11,7 @@ class Order < ApplicationRecord
     inprogress: "Inprogress", canceled: "Canceled", paid: "Paid"
   }
   # validates_presence_of :customer_name, :customer_email
-  validates_presence_of :order_details
+  # validates_presence_of :order_details
 
   private
 
@@ -34,7 +34,7 @@ class Order < ApplicationRecord
             if child_order_detail.present? && child_order_detail.quantity >= offer.child_item_quantity
               offer
             end
-          elsif offer.child_item_id.present? && !child_order_detail.marked_for_destruction? && child_order_detail.quantity >= offer.child_item_quantity
+          elsif offer.child_item_id.present? && child_order_detail.present? && !child_order_detail.marked_for_destruction? && child_order_detail.quantity >= offer.child_item_quantity
             offer
           elsif offer.child_item_id.blank?
             offer
