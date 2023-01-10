@@ -6,6 +6,6 @@ class Item < ApplicationRecord
   delegate :rate, to: :tax_rate
 
   def image_url
-    "https://9319-2405-201-3008-c16d-fc81-a1f0-a635-4390.in.ngrok.io" + Rails.application.routes.url_helpers.rails_blob_path(image, disposition: "attachment", only_path: true)
+    "https://coffee-shop1.herokuapp.com" + Rails.application.routes.url_helpers.rails_blob_path(image, disposition: "attachment", only_path: true)
   end
 end
