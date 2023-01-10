@@ -173,6 +173,7 @@ DEPENDENCIES
   puma (~> 5.0)
   rack-cors
   rails (~> 7.0.4)
+  ruby-vips
   tzinfo-data
 
 RUBY VERSION
