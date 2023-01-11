@@ -2,7 +2,7 @@ require 'jwt'
 
 module JwtToken
   extend ActiveSupport::Concern
-  SECRET_KEY = Rails.application.secrets.secret_key_base.to_s
+  SECRET_KEY = Rails.application.secrets.secret_key_base.to_s || ENV["SECRET_KEY_BASE"]
 
   def decode(token)
     decoded_token = JWT.decode(token, SECRET_KEY)[0]
